@@ -1,0 +1,19 @@
+{
+  "name": "nexusflow",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.16.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"pnpm --filter @nexusflow/server dev\" \"pnpm --filter @nexusflow/web dev\"",
+    "dev:server": "pnpm --filter @nexusflow/server dev",
+    "dev:web": "pnpm --filter @nexusflow/web dev",
+    "build": "pnpm --filter @nexusflow/web build",
+    "test": "pnpm --filter @nexusflow/server test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
