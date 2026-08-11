@@ -20,7 +20,9 @@ button { font: inherit; }
 .sidebar { padding: 26px 18px; border-right: 1px solid #18324b; background: rgba(7, 17, 31, 0.9); }
 .sidebar h2 { margin: 0; font-size: 15px; }
 .sidebar p { margin: 6px 0 22px; color: #7895b1; font-size: 12px; }
-.sidebar button { width: 100%; margin-bottom: 10px; padding: 12px; border: 1px solid #244762; border-radius: 9px; color: #cce3f5; background: #0c2033; text-align: left; cursor: pointer; }
+.sidebar button { display: flex; width: 100%; gap: 10px; align-items: center; margin-bottom: 10px; padding: 12px; border: 1px solid #244762; border-radius: 9px; color: #cce3f5; background: #0c2033; text-align: left; cursor: grab; transition: border-color 160ms ease, transform 160ms ease; }
+.sidebar button span { width: 20px; color: #22d3ee; font-weight: 800; text-align: center; }
+.sidebar button:active { cursor: grabbing; }
 .sidebar button:hover { border-color: #22d3ee; transform: translateY(-1px); }
 .canvas { min-height: 500px; }
 .hint { padding: 8px 12px; border: 1px solid #1d405b; border-radius: 8px; color: #7f9db8; background: rgba(7, 17, 31, 0.84); font-size: 12px; }
@@ -33,4 +35,3 @@ button { font: inherit; }
   .topbar { height: 76px; padding: 0 18px; }
   .workspace { height: calc(100vh - 76px); }
 }
-

@@ -8,7 +8,8 @@ Visual IoT telemetry and rule-engine platform. NexusFlow combines a React Flow c
 - Thirty-day automatic telemetry retention
 - Single-point and batch ingestion (up to 1,000 points per request)
 - Input validation and an API health endpoint
-- React Flow canvas with a sample Turbine Sensor → Moving Average → SMS Alert pipeline
+- Interactive React Flow canvas with click-to-add and drag-and-drop node creation
+- Sample Turbine Sensor → Moving Average → SMS Alert pipeline
 - Responsive dark monitoring interface
 
 ## Requirements

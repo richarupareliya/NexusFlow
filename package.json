@@ -11,7 +11,7 @@
     "dev:server": "pnpm --filter @nexusflow/server dev",
     "dev:web": "pnpm --filter @nexusflow/web dev",
     "build": "pnpm --filter @nexusflow/web build",
-    "test": "pnpm --filter @nexusflow/server test"
+    "test": "pnpm --filter @nexusflow/server test && pnpm --filter @nexusflow/web test"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
