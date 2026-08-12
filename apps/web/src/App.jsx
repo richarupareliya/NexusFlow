@@ -9,25 +9,25 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { createCanvasNode, NODE_LIBRARY } from "./canvasModel.js";
+import { createCanvasNode, NODE_LIBRARY, serializeGraph } from "./canvasModel.js";
 
 const initialNodes = [
   {
     id: "turbine-01",
     position: { x: 80, y: 150 },
-    data: { label: "Turbine Sensor" },
+    data: { label: "Turbine Sensor", nodeType: "source", config: { deviceId: "turbine-01" } },
     style: { borderColor: "#22d3ee", background: "#10283b", color: "#e6fbff" },
   },
   {
     id: "average-01",
     position: { x: 360, y: 150 },
-    data: { label: "Moving Average" },
+    data: { label: "Moving Average", nodeType: "operation", config: { windowSize: 10 } },
     style: { borderColor: "#a78bfa", background: "#251d3b", color: "#f4efff" },
   },
   {
     id: "alert-01",
     position: { x: 650, y: 150 },
-    data: { label: "SMS Alert" },
+    data: { label: "SMS Alert", nodeType: "action", config: { threshold: 80 } },
     style: { borderColor: "#fb7185", background: "#3b1821", color: "#fff1f3" },
   },
 ];
@@ -41,6 +41,7 @@ export function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlow, setReactFlow] = useState(null);
+  const [serializedGraph, setSerializedGraph] = useState("");
   const nextNodeId = useRef(initialNodes.length + 1);
   const onConnect = useCallback(
     (connection) => setEdges((currentEdges) => addEdge({ ...connection, animated: true }, currentEdges)),
@@ -75,6 +76,10 @@ export function App() {
     [addNode, reactFlow],
   );
 
+  const exportGraph = useCallback(() => {
+    setSerializedGraph(JSON.stringify(serializeGraph(nodes, edges), null, 2));
+  }, [edges, nodes]);
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -101,6 +106,21 @@ export function App() {
               {definition.category}
             </button>
           ))}
+          <button type="button" className="export-button" onClick={exportGraph}>
+            <span aria-hidden="true">{`{ }`}</span>
+            Serialize graph
+          </button>
+          {serializedGraph && (
+            <div className="graph-output">
+              <div>
+                <strong>Compiler JSON</strong>
+                <button type="button" onClick={() => navigator.clipboard?.writeText(serializedGraph)}>
+                  Copy
+                </button>
+              </div>
+              <pre>{serializedGraph}</pre>
+            </div>
+          )}
         </aside>
 
         <div className="canvas" aria-label="Visual telemetry pipeline editor">

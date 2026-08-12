@@ -24,6 +24,11 @@ button { font: inherit; }
 .sidebar button span { width: 20px; color: #22d3ee; font-weight: 800; text-align: center; }
 .sidebar button:active { cursor: grabbing; }
 .sidebar button:hover { border-color: #22d3ee; transform: translateY(-1px); }
+.sidebar .export-button { margin-top: 22px; cursor: pointer; border-color: #2e6073; }
+.graph-output { margin-top: 14px; padding: 10px; border: 1px solid #244762; border-radius: 9px; background: #071522; }
+.graph-output > div { display: flex; align-items: center; justify-content: space-between; color: #9fc1dc; font-size: 11px; }
+.graph-output > div button { width: auto; margin: 0; padding: 4px 7px; cursor: pointer; }
+.graph-output pre { max-height: 210px; margin: 9px 0 0; overflow: auto; color: #86efac; font: 10px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; }
 .canvas { min-height: 500px; }
 .hint { padding: 8px 12px; border: 1px solid #1d405b; border-radius: 8px; color: #7f9db8; background: rgba(7, 17, 31, 0.84); font-size: 12px; }
 .react-flow__edge-path { stroke: #39bdd8; stroke-width: 2; }

@@ -37,3 +37,25 @@ export function createCanvasNode(type, id, position) {
   };
 }
 
+export function serializeGraph(nodes, edges) {
+  if (!Array.isArray(nodes) || !Array.isArray(edges)) {
+    throw new TypeError("nodes and edges must be arrays.");
+  }
+
+  return {
+    version: 1,
+    nodes: nodes.map((node) => ({
+      id: node.id,
+      type: node.data?.nodeType,
+      config: node.data?.config ?? {},
+      position: { x: node.position.x, y: node.position.y },
+    })),
+    edges: edges.map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      sourceHandle: edge.sourceHandle ?? null,
+      targetHandle: edge.targetHandle ?? null,
+    })),
+  };
+}

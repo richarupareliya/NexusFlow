@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import { validateGraph } from "./graph.js";
 import { normalizeBatch } from "./telemetry.js";
 
 export function createApp({ telemetry }) {
@@ -25,6 +26,14 @@ export function createApp({ telemetry }) {
     }
   });
 
+  app.post("/api/v1/graphs/validate", (request, response, next) => {
+    try {
+      response.json(validateGraph(request.body));
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.use((error, _request, response, _next) => {
     if (error instanceof TypeError || error instanceof RangeError) {
       response.status(400).json({ error: error.message });
@@ -36,4 +45,3 @@ export function createApp({ telemetry }) {
 
   return app;
 }
-
