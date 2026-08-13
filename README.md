@@ -11,6 +11,7 @@ Visual IoT telemetry and rule-engine platform. NexusFlow combines a React Flow c
 - Interactive React Flow canvas with click-to-add and drag-and-drop node creation
 - Sample Turbine Sensor → Moving Average → SMS Alert pipeline
 - Versioned graph serialization with backend validation for compiler-ready JSON
+- RxJS compiler for sensor filtering, moving averages, and threshold actions
 - Responsive dark monitoring interface
 
 ## Requirements

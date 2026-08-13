@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { validateGraph } from "../src/graph.js";
+import { orderGraph, validateGraph } from "../src/graph.js";
 
 const validGraph = {
   version: 1,
@@ -41,3 +41,23 @@ test("rejects dangling and self-referencing edges", () => {
   );
 });
 
+test("orders graph nodes from source to action", () => {
+  assert.deepEqual(orderGraph(validGraph), ["sensor-1", "average-1", "alert-1"]);
+});
+
+test("rejects cyclic graphs", () => {
+  assert.throws(
+    () => validateGraph({
+      version: 1,
+      nodes: [
+        { id: "a", type: "operation" },
+        { id: "b", type: "operation" },
+      ],
+      edges: [
+        { id: "ab", source: "a", target: "b" },
+        { id: "ba", source: "b", target: "a" },
+      ],
+    }),
+    /cycles/,
+  );
+});

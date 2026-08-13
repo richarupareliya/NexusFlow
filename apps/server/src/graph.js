@@ -36,6 +36,7 @@ export function validateGraph(graph) {
   }
 
   const edgeIds = new Set();
+  const inboundCounts = new Map(nodes.map((node) => [node.id, 0]));
   for (const edge of edges) {
     if (typeof edge?.id !== "string" || edge.id.trim() === "") {
       throw new TypeError("every edge must have a non-empty id.");
@@ -49,7 +50,23 @@ export function validateGraph(graph) {
     if (edge.source === edge.target) {
       throw new TypeError(`edge ${edge.id} cannot connect a node to itself.`);
     }
+    inboundCounts.set(edge.target, inboundCounts.get(edge.target) + 1);
     edgeIds.add(edge.id);
+  }
+
+  const queue = nodes.filter((node) => inboundCounts.get(node.id) === 0).map((node) => node.id);
+  let visitedCount = 0;
+  while (queue.length > 0) {
+    const nodeId = queue.shift();
+    visitedCount += 1;
+    for (const edge of edges.filter((candidate) => candidate.source === nodeId)) {
+      const remaining = inboundCounts.get(edge.target) - 1;
+      inboundCounts.set(edge.target, remaining);
+      if (remaining === 0) queue.push(edge.target);
+    }
+  }
+  if (visitedCount !== nodes.length) {
+    throw new TypeError("graph must not contain cycles.");
   }
 
   return {
@@ -59,3 +76,25 @@ export function validateGraph(graph) {
   };
 }
 
+export function orderGraph(graph) {
+  validateGraph(graph);
+  const inboundCounts = new Map(graph.nodes.map((node) => [node.id, 0]));
+  const outgoing = new Map(graph.nodes.map((node) => [node.id, []]));
+  for (const edge of graph.edges) {
+    inboundCounts.set(edge.target, inboundCounts.get(edge.target) + 1);
+    outgoing.get(edge.source).push(edge.target);
+  }
+
+  const queue = graph.nodes.filter((node) => inboundCounts.get(node.id) === 0).map((node) => node.id);
+  const ordered = [];
+  while (queue.length > 0) {
+    const nodeId = queue.shift();
+    ordered.push(nodeId);
+    for (const target of outgoing.get(nodeId)) {
+      const remaining = inboundCounts.get(target) - 1;
+      inboundCounts.set(target, remaining);
+      if (remaining === 0) queue.push(target);
+    }
+  }
+  return ordered;
+}
