@@ -33,6 +33,16 @@ button { font: inherit; }
 .hint { padding: 8px 12px; border: 1px solid #1d405b; border-radius: 8px; color: #7f9db8; background: rgba(7, 17, 31, 0.84); font-size: 12px; }
 .react-flow__edge-path { stroke: #39bdd8; stroke-width: 2; }
 .react-flow__controls button { color: #dceaf8; background: #0c2033; border-color: #244762; }
+.telemetry-node { min-width: 190px; padding: 13px; border: 1px solid currentColor; border-radius: 10px; background: inherit; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24); }
+.telemetry-node--source { color: #67e8f9; }
+.telemetry-node--operation { color: #c4b5fd; }
+.telemetry-node--action { color: #fda4af; }
+.telemetry-node .node-category { display: block; margin-bottom: 3px; opacity: 0.65; font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.telemetry-node strong { color: #f1f7fc; font-size: 13px; }
+.telemetry-node label { display: block; margin-top: 11px; color: #8ca9c2; font-size: 10px; }
+.telemetry-node input { display: block; width: 100%; margin-top: 5px; padding: 7px 8px; border: 1px solid #35536d; border-radius: 6px; outline: none; color: #dceaf8; background: #07121f; }
+.telemetry-node input:focus { border-color: currentColor; box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.14); }
+.telemetry-node .react-flow__handle { width: 10px; height: 10px; border: 2px solid #06111f; background: currentColor; }
 
 @media (max-width: 720px) {
   .workspace { grid-template-columns: 1fr; }

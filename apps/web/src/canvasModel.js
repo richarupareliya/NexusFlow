@@ -2,16 +2,19 @@ export const NODE_LIBRARY = Object.freeze({
   source: {
     label: "Turbine Sensor",
     category: "Data source",
+    defaultConfig: { deviceId: "turbine-01" },
     style: { borderColor: "#22d3ee", background: "#10283b", color: "#e6fbff" },
   },
   operation: {
     label: "Moving Average",
     category: "Math operation",
+    defaultConfig: { windowSize: 10 },
     style: { borderColor: "#a78bfa", background: "#251d3b", color: "#f4efff" },
   },
   action: {
     label: "SMS Alert",
     category: "Action trigger",
+    defaultConfig: { threshold: 80 },
     style: { borderColor: "#fb7185", background: "#3b1821", color: "#fff1f3" },
   },
 });
@@ -30,11 +33,23 @@ export function createCanvasNode(type, id, position) {
 
   return {
     id,
-    type: "default",
+    type: "telemetryNode",
     position,
-    data: { label: definition.label, nodeType: type, category: definition.category },
+    data: {
+      label: definition.label,
+      nodeType: type,
+      category: definition.category,
+      config: { ...definition.defaultConfig },
+    },
     style: definition.style,
   };
+}
+
+export function updateNodeConfig(nodes, nodeId, config) {
+  if (!Array.isArray(nodes)) throw new TypeError("nodes must be an array.");
+  return nodes.map((node) => node.id === nodeId
+    ? { ...node, data: { ...node.data, config: { ...config } } }
+    : node);
 }
 
 export function serializeGraph(nodes, edges) {
