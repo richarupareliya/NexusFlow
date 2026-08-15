@@ -1,4 +1,4 @@
-import { filter, map, scan, share } from "rxjs";
+import { filter, from, lastValueFrom, map, scan, share, toArray } from "rxjs";
 import { orderGraph, validateGraph } from "./graph.js";
 
 function movingAverage(windowSize) {
@@ -66,4 +66,30 @@ export function compileGraph(graph, telemetry$) {
     pipeline$ = pipeline$.pipe(compileNode(nodesById.get(nodeId)));
   }
   return pipeline$.pipe(share());
+}
+
+export async function simulateGraph(graph, telemetryPoints) {
+  if (!Array.isArray(telemetryPoints) || telemetryPoints.length === 0) {
+    throw new TypeError("telemetry must be a non-empty array.");
+  }
+  if (telemetryPoints.length > 1000) {
+    throw new RangeError("simulation accepts at most 1000 telemetry points.");
+  }
+
+  const normalized = telemetryPoints.map((point, index) => {
+    if (typeof point?.deviceId !== "string" || point.deviceId.trim() === "") {
+      throw new TypeError(`telemetry[${index}].deviceId must be a non-empty string.`);
+    }
+    if (typeof point.value !== "number" || !Number.isFinite(point.value)) {
+      throw new TypeError(`telemetry[${index}].value must be a finite number.`);
+    }
+    return { ...point, deviceId: point.deviceId.trim() };
+  });
+
+  const alerts = await lastValueFrom(compileGraph(graph, from(normalized)).pipe(toArray()));
+  return {
+    processed: normalized.length,
+    alertCount: alerts.length,
+    alerts,
+  };
 }

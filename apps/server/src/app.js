@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import { simulateGraph } from "./compiler.js";
 import { validateGraph } from "./graph.js";
 import { normalizeBatch } from "./telemetry.js";
 
@@ -34,13 +35,22 @@ export function createApp({ telemetry }) {
     }
   });
 
+  app.post("/api/v1/graphs/simulate", async (request, response, next) => {
+    try {
+      const { graph, telemetry: telemetryPoints } = request.body ?? {};
+      response.json(await simulateGraph(graph, telemetryPoints));
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.use((error, _request, response, _next) => {
     if (error instanceof TypeError || error instanceof RangeError) {
       response.status(400).json({ error: error.message });
       return;
     }
     console.error(error);
-    response.status(500).json({ error: "Telemetry ingestion failed." });
+    response.status(500).json({ error: "NexusFlow request failed." });
   });
 
   return app;

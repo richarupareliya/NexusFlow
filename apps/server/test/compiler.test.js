@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { from, lastValueFrom, toArray } from "rxjs";
-import { compileGraph } from "../src/compiler.js";
+import { compileGraph, simulateGraph } from "../src/compiler.js";
 
 const graph = {
   version: 1,
@@ -50,4 +50,27 @@ test("rejects branching until multi-stream compilation is supported", () => {
   };
 
   assert.throws(() => compileGraph(branchingGraph, from([])), /linear source-to-action/);
+});
+
+test("simulates telemetry and reports alert results", async () => {
+  const result = await simulateGraph(graph, [
+    { deviceId: "turbine-01", value: 79, timestamp: "2026-08-15T10:00:00Z" },
+    { deviceId: "turbine-01", value: 85, timestamp: "2026-08-15T10:00:01Z" },
+  ]);
+
+  assert.equal(result.processed, 2);
+  assert.equal(result.alertCount, 1);
+  assert.equal(result.alerts[0].value, 82);
+});
+
+test("rejects malformed and oversized simulation data", async () => {
+  await assert.rejects(() => simulateGraph(graph, []), /non-empty array/);
+  await assert.rejects(
+    () => simulateGraph(graph, [{ deviceId: "turbine-01", value: "hot" }]),
+    /finite number/,
+  );
+  await assert.rejects(
+    () => simulateGraph(graph, Array.from({ length: 1001 }, () => ({ deviceId: "x", value: 1 }))),
+    /at most 1000/,
+  );
 });

@@ -13,6 +13,7 @@ Visual IoT telemetry and rule-engine platform. NexusFlow combines a React Flow c
 - Versioned graph serialization with backend validation for compiler-ready JSON
 - RxJS compiler for sensor filtering, moving averages, and threshold actions
 - Configurable custom nodes whose settings serialize directly into compiler input
+- Graph simulation API for testing rules against up to 1,000 telemetry samples
 - Responsive dark monitoring interface
 
 ## Requirements
@@ -39,6 +40,25 @@ curl -X POST http://localhost:4000/api/v1/telemetry \
 ```
 
 The endpoint also accepts an array of up to 1,000 points for efficient batch ingestion.
+
+Validate and simulate a visual rule before activating it:
+
+```http
+POST /api/v1/graphs/simulate
+Content-Type: application/json
+
+{
+  "graph": {
+    "version": 1,
+    "nodes": [
+      { "id": "sensor", "type": "source", "config": { "deviceId": "turbine-01" } },
+      { "id": "alert", "type": "action", "config": { "threshold": 80 } }
+    ],
+    "edges": [{ "id": "sensor-alert", "source": "sensor", "target": "alert" }]
+  },
+  "telemetry": [{ "deviceId": "turbine-01", "value": 82.4 }]
+}
+```
 
 ## Quality checks
 
