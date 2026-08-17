@@ -14,6 +14,7 @@ Visual IoT telemetry and rule-engine platform. NexusFlow combines a React Flow c
 - RxJS compiler for sensor filtering, moving averages, and threshold actions
 - Configurable custom nodes whose settings serialize directly into compiler input
 - Graph simulation API for testing rules against up to 1,000 telemetry samples
+- Persistent MongoDB rule graphs with revision-safe updates
 - Responsive dark monitoring interface
 
 ## Requirements
